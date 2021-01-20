@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+
+  front:
+    image: bunkerity/bunkerized-nginx
+    restart: always
+    ports:
+      - "80:8880"
+      - "443:8443"
+    volumes:
+      - ./server-confs:/server-confs
+      - ./distfront:/www
+      - ./certificates:/etc/letsencrypt
+
+// TODO: à modifier
+
+    environment:
+      - SERVER_NAME=www.website.com
+      - AUTO_LETS_ENCRYPT=yes
+      - REDIRECT_HTTP_TO_HTTPS=yes
+      - DISABLE_DEFAULT_SERVER=yes
+      - MAX_CLIENT_SIZE=50m
+      - USE_CLIENT_CACHE=yes
+      - USE_GZIP=yes
+      - USE_BROTLI=yes
+      - REMOTE_PHP=mywp
+      - REMOTE_PHP_PATH=/var/www/html
+  back:
+    image: barais/doodleback-with-quarkus
+    
+// 
+
+  mydb:
+    image: mysql
+    restart: always
+    ports: 
+      - "3306:3386"
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_ROOT_PASSWORD=tlc
+      - MYSQL_DATABASE=tlc
+      - MYSQL_USER=tlc
+      - MYSQL_PASSWORD=tlc
+      - MY_SQL_ALLOW_EMPTY_PASSWORD=true
+
+  etherpad:
+    image: etherpad/etherpad
+    ports:
+      - "9001:9081"
+    volumes:
+      - ./etherpadkey/APIKEY.txt:/opt/etherpad-lite/APIKEY.txt
