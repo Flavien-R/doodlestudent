@@ -12,25 +12,24 @@ services:
       - ./server-confs:/server-confs
       - ./distfront:/www
       - ./certificates:/etc/letsencrypt
-
-// TODO: à modifier
-
     environment:
-      - SERVER_NAME=www.website.com
-      - AUTO_LETS_ENCRYPT=yes
-      - REDIRECT_HTTP_TO_HTTPS=yes
-      - DISABLE_DEFAULT_SERVER=yes
-      - MAX_CLIENT_SIZE=50m
-      - USE_CLIENT_CACHE=yes
-      - USE_GZIP=yes
-      - USE_BROTLI=yes
-      - REMOTE_PHP=mywp
-      - REMOTE_PHP_PATH=/var/www/html
+      - SERVER_NAME=doodle.diverse-team.fr pad.diverse-team.fr phpmyadmin.divers-team.fr
+      - SAVE_FILES=yes
+      - DISABLE_DEFAULT_SERVER=no
+      
   back:
     image: barais/doodleback-with-quarkus
+    ports:
+     - "8080:8080"
+    volumes:
+     - ./backconfig:/work/config
+    deploy:
+     replicas: 6
+     placement:
+      max_replicas_per_node: 1
+     restart_policy:
+      condition: on-failure
     
-// 
-
   mydb:
     image: mysql
     restart: always
