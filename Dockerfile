@@ -6,10 +6,11 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y git
+    apt-get install -y git && \
+    apt-get install -y openjdk-11-jdk
 
-RUN apt-get install -y openjdk-8-jdk
+RUN apt-get install -y maven
 
-RUN git clone https://github.com/Flavien-R/doodlestudent.git
-
-// compiler le projet puis utiliser le res avec le nginx
+RUN git clone https://github.com/Flavien-R/doodlestudent.git && \
+	cd doodlestudent/api && \
+	mvn package compile -Dmaven.test.skip=true -Dquarkus.package.type=uber-jar
