@@ -1,34 +1,39 @@
-version: '3'
+version: '3.8'
 
 services:
 
   front:
-    image: bunkerity/bunkerized-nginx
+    image: tlcfront
     restart: always
     ports:
-      - "80:8880"
+      - "80:8080"
       - "443:8443"
     volumes:
-      - ./server-confs:/server-confs
+      - ./server-confs:/server-confs:ro
       - ./distfront:/www
       - ./certificates:/etc/letsencrypt
     environment:
-      - SERVER_NAME=doodle.diverse-team.fr pad.diverse-team.fr phpmyadmin.divers-team.fr
+      - SERVER_NAME=doodle.diverse-team.fr etherpad.diverse-team.fr
       - SAVE_FILES=yes
       - DISABLE_DEFAULT_SERVER=no
+      - PROXY_REAL_IP=yes
+      #No si local, yes sur VM
+      - AUTO_LETS_ENCRYPT=no
+      - REDIRECT_HTTP_TO_HTTPS=no
+      #
+      - USE_LIMIT_REQ=no
+      - HTTP2=no
+      - FEATURE_POLICY=accelerometer 'none'; ambient-light-sensor 'none'; autoplay 'none'; camera 'none'; display-capture 'none'; document-domain 'none'; encrypted-media 'none'; fullscreen 'none'; geolocation 'none'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; midi 'none'; payment 'none'; picture-in-picture 'none'; speaker 'none'; sync-xhr 'self'; usb 'none'; vibrate 'none'; vr 'none'
       
   back:
-    image: barais/doodleback-with-quarkus
+    image: tlcback
     ports:
      - "8080:8080"
     volumes:
      - ./backconfig:/work/config
     deploy:
-     replicas: 6
-     placement:
-      max_replicas_per_node: 1
-     restart_policy:
-      condition: on-failure
+      restart_policy:
+        condition: on-failure
     
   mydb:
     image: mysql
