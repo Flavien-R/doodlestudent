@@ -11,7 +11,7 @@ quarkus:
     username: root
     password: ""
     jdbc:
-      url: jdbc:mysql://localhost:3306/tlc?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&createDatabaseIfNotExist=true&serverTimezone=Europe/Paris
+      url: jdbc:mysql://mydb:3306/tlc?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&createDatabaseIfNotExist=true&serverTimezone=Europe/Paris
       driver: com.mysql.cj.jdbc.Driver
   hibernate-orm:
     database:
@@ -23,6 +23,6 @@ quarkus:
     port: 2525
 #    port: 465
 #    ssl: true
-#    username: ""
-#    password: ""
+#    username: "tlc"
+#    password: "tlc"
     mock: false
